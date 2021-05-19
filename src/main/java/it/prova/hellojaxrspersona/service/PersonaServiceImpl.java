@@ -117,7 +117,7 @@ public class PersonaServiceImpl implements IPersonaService {
 
 			personaDAO.setEntityManager(entityManager);
 			input=entityManager.merge(input);
-			personaDAO.update(input);
+			personaDAO.delete(input);
 			entityManager.getTransaction().commit();
 			
 		} catch (Exception e) {
