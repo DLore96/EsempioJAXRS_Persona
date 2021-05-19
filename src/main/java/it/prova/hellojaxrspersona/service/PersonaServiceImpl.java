@@ -9,13 +9,13 @@ import it.prova.hellojaxrspersona.model.Persona;
 import it.prova.hellojaxrspersona.web.listener.LocalEntityManagerFactoryListener;
 
 public class PersonaServiceImpl implements IPersonaService {
-	
+
 	private IPersonaDAO personaDAO;
 
 	@Override
 	public void setPersonaDAO(IPersonaDAO personaDAO) {
 
-		this.personaDAO=personaDAO;
+		this.personaDAO = personaDAO;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			// eseguo quello che realmente devo fare
 			personaDAO.update(input);
 			entityManager.getTransaction().commit();
-			
+
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
 			e.printStackTrace();
@@ -96,7 +96,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			// eseguo quello che realmente devo fare
 			personaDAO.insert(input);
 			entityManager.getTransaction().commit();
-			
+
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
 			e.printStackTrace();
@@ -112,14 +112,14 @@ public class PersonaServiceImpl implements IPersonaService {
 		EntityManager entityManager = LocalEntityManagerFactoryListener.getEntityManager();
 
 		try {
-	
+
 			entityManager.getTransaction().begin();
 
 			personaDAO.setEntityManager(entityManager);
-			input=entityManager.merge(input);
+			input = entityManager.merge(input);
 			personaDAO.delete(input);
 			entityManager.getTransaction().commit();
-			
+
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
 			e.printStackTrace();
@@ -129,6 +129,26 @@ public class PersonaServiceImpl implements IPersonaService {
 		}
 	}
 
+	@Override
+	public List<Persona> findByExample(Persona input) throws Exception {
 
+		// questo è come una connection
+		EntityManager entityManager = LocalEntityManagerFactoryListener.getEntityManager();
+
+		try {
+
+			personaDAO.setEntityManager(entityManager);
+
+			return personaDAO.findByExample(input);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			LocalEntityManagerFactoryListener.closeEntityManager(entityManager);
+		}
+	}
+	
+	
 
 }

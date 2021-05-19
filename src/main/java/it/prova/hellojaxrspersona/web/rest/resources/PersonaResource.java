@@ -56,7 +56,7 @@ public class PersonaResource {
 			return Response.status(200).entity(risultato).build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(200).entity(result).build();
+			throw new RuntimeException("Qualcosa è andato storto");
 		}
 		
 		
@@ -86,10 +86,18 @@ public class PersonaResource {
 		Persona personaInstance= new Persona();
 		try {
 			personaInstance = personaServiceInstance.caricaSingoloElemento(id);
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+			objectMapper.setDateFormat(df);
+			String risultato = objectMapper.writeValueAsString(personaInstance);
+			return Response.status(200).entity(risultato).build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Qualcosa è andato storto");
 		}
-		return Response.status(200).entity(personaInstance).build();
+		
+		
 
 	}
 	
@@ -128,6 +136,27 @@ public class PersonaResource {
 			e.printStackTrace();
 		}
 		return Response.status(200).entity(personaInput).build();
+	}
+	
+	@POST
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchPersona(Persona personaInput) {
+		LOGGER.info("Verbo Http.........................." + request.getMethod());
+		try {
+			List<Persona> result = personaServiceInstance.findByExample(personaInput);
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+			objectMapper.setDateFormat(df);
+			String risultato = objectMapper.writeValueAsString(result);
+
+			return Response.status(200).entity(risultato).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Qualcosa è andato storto");
+		}
 	}
 
 }

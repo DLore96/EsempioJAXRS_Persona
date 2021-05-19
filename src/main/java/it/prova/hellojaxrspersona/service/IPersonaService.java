@@ -17,6 +17,8 @@ public interface IPersonaService {
 
 	public void rimuovi(Persona input) throws Exception;
 	
+	public List<Persona> findByExample(Persona input)throws Exception;
+	
 	
 	//Injection
 	public void setPersonaDAO(IPersonaDAO personaDAO);
